@@ -16,6 +16,7 @@ import { useDispatch } from "react-redux";
 
 export default function Contact() {
   const location = useLocation();
+  console.log(location.pathname);
   const id = location.pathname.split("/")[2];
   const [contact, setContact] = useState({});
   const dispatch = useDispatch();

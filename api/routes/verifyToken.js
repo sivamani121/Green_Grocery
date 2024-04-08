@@ -3,7 +3,7 @@ const jwt = require("jsonwebtoken");
 const verifyToken = (req, res, next) => {
   const authHeader = req.headers.token;
   // const authHeader = true;
-
+  console.log(authHeader);
   if (authHeader) {
     const token = authHeader.split(" ")[1];
     // const token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYxOTI0ZjM4NjRhODM2YTJiZTFiYWZlMyIsImlzQWRtaW4iOnRydWUsImlhdCI6MTY2MTE5MDExNCwiZXhwIjoxNjg3MTEwMTE0fQ.ABHHOai5tWVIgVnEgW0bwUAlBhlS9b_M-JIDK8HMSGs"

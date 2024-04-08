@@ -1,46 +1,46 @@
 import { useState } from "react";
 import "./newProduct.css";
+import { getStorage, ref } from "firebase/storage";
+import app from "../../firebase";
 import { addProduct } from "../../redux/apiCalls";
 import { useDispatch } from "react-redux";
 import { Link } from "react-router-dom";
-
+import { GrToast } from "react-icons/gr";
 
 export default function NewProduct() {
-  const [inputs, setInputs] = useState({});
+  const [inputs, setInputs] = useState({ inStock: true, color: "red" });
+  const [file, setFile] = useState("");
   const [cat, setCat] = useState([]);
-  const dispatch = useDispatch();
+  const dispatch = useDispatch("product");
 
   const handleChange = (e) => {
     setInputs((prev) => {
       return { ...prev, [e.target.name]: e.target.value };
     });
   };
-  const handleCat = (e) => {
-    setCat(e.target.value);
+  const handleCat = async (e) => {
+    setCat(Array(e.target.value.split(",")));
+
+    setInputs((prev) => {
+      return { ...prev, [e.target.name]: Array(e.target.value.split(",")) };
+    });
   };
 
   const handleClick = (e) => {
+    console.log(inputs);
+
     e.preventDefault();
-
-    // Assuming you want to store the image URL directly
-    const productData = {
-      title: inputs.title,
-      desc: inputs.desc,
-      price: inputs.price,
-      categories: cat.split(",").map((c) => c.trim()), // Split categories by comma and trim whitespace
-      inStock: inputs.inStock === "true",
-      imageURL: inputs.imageURL, // Use the imageURL from the input field
-    };
-
-    // Dispatch action to add product
-    dispatch(addProduct(productData));
-
-    // Optionally, you can reset the form fields after successful submission
-    setInputs({});
-    setCat("");
-  }
+    try{addProduct(inputs,dispatch);
     
-  
+   }
+    catch(error){
+
+    }
+    // const fileName = new Date().getTime() + file.name;
+    // const storage = getStorage(app);
+    // const storageRef = ref(storage, fileName);
+
+  };
 
   return (
     <div className="newProduct">
@@ -49,11 +49,11 @@ export default function NewProduct() {
         <div className="addProductItem">
           <label>Image URL</label>
           <input
-            type="text"
-            name="imageURL"
-            placeholder="https://example.com/image.jpg"
-            value={inputs.imageURL}
-            onChange={handleChange}
+            type="link"
+            id="file"
+            name="img"
+            value={inputs["img"]}
+            onChange={(e) => handleChange(e)}
           />
         </div>
         <div className="addProductItem">
@@ -62,7 +62,7 @@ export default function NewProduct() {
             name="title"
             type="text"
             placeholder="Mango..."
-            onChange={(e)=>handleChange(e)}
+            onChange={(e) => handleChange(e)}
           />
         </div>
         <div className="addProductItem">
@@ -71,7 +71,7 @@ export default function NewProduct() {
             name="desc"
             type="text"
             placeholder="Description..."
-            onChange={(e)=>handleChange(e)}
+            onChange={(e) => handleChange(e)}
           />
         </div>
         <div className="addProductItem">
@@ -80,18 +80,20 @@ export default function NewProduct() {
             name="price"
             type="number"
             placeholder="100"
-            onChange={(e)=>handleChange(e)}
+            onChange={(e) => handleChange(e)}
           />
         </div>
         <div className="addProductItem">
           <label>Categories</label>
-          <input type="text"
-           placeholder="Fruit, Vegetable"
-            value={cat} 
-            onChange={(e)=>handleCat(e)}
-             />
+          <input
+            type="text"
+            placeholder="Fruit, Vegetable"
+            value={cat.join(",")}
+            name="categories"
+            onChange={(e) => handleCat(e)}
+          />
         </div>
-        {/* <div className="addProductItem">
+        <div className="addProductItem">
           <label>Color</label>
           <select name="color" onChange={handleChange}>
             <option value="red">Red</option>
@@ -100,7 +102,7 @@ export default function NewProduct() {
             <option value="black">Black</option>
             <option value="brown">Brown</option>
           </select>
-        </div> */}
+        </div>
         <div className="addProductItem">
           <label>Stock</label>
           <select name="inStock" onChange={handleChange}>
