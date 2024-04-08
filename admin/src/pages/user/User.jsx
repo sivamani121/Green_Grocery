@@ -16,6 +16,7 @@ import { useDispatch } from "react-redux";
 
 export default function User() {
   const location = useLocation();
+  console.log(location.pathname);
   const id = location.pathname.split("/")[2];
   const [user, setUser] = useState({});
   const dispatch = useDispatch();

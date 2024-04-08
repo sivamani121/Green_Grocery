@@ -9,6 +9,7 @@ import { userRequest } from "../../requestMethods";
 
 export default function Product() {
   const location = useLocation();
+  console.log(location.pathname,"hi");
   const productId = location.pathname.split("/")[2];
   const [pStats, setPStats] = useState([]);
 
