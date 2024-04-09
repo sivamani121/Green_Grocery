@@ -47,7 +47,7 @@ export default function NewProduct() {
       <h1 className="addProductTitle">New Product</h1>
       <form className="addProductForm">
         <div className="addProductItem">
-          <label>Image</label>
+          <label>Image URL</label>
           <input
             type="link"
             id="file"
