@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import styled from "styled-components";
 import Product from "./Product";
 import axios from "axios";
+import { useSelector } from "react-redux";
 
 const Container = styled.div`
   padding: 20px;
@@ -15,20 +16,21 @@ const Container = styled.div`
 const Products2 = ({ cat, filters, sort }) => {
   const [products, setProducts] = useState([]);
   const [filteredProducts, setFilteredProducts] = useState([]);
-
+  const search = useSelector((state) => state.product.search);
+  console.log(search);
   useEffect(() => {
     const getProducts = async () => {
       try {
         const res = await axios.get(
-          cat
-            ? `http://localhost:5000/api/products?category=${cat}`
-            : "http://localhost:5000/api/products"
+          `http://localhost:5000/api/products/hi?categories=${
+            cat ? cat : ""
+          }&title=${search ? search : ""}`
         );
         setProducts(res.data);
       } catch (err) {}
     };
     getProducts();
-  }, [cat]);
+  }, [search]);
 
   useEffect(() => {
     cat &&
@@ -62,7 +64,7 @@ const Products2 = ({ cat, filters, sort }) => {
       {cat
         ? filteredProducts.map((item) => <Product item={item} key={item.id} />)
         : products
-            .slice(0,12)
+            .slice(0, 12)
             .map((item) => <Product item={item} key={item.id} />)}
     </Container>
   );

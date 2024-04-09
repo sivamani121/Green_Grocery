@@ -82,4 +82,56 @@ router.get("/", async (req, res) => {
   }
 });
 
+// router.get("/:title", async (req, res) => {
+//   const { title } = req.params;
+//   console.log(title, "from my");
+//   try {
+//     // Use regex to search for products with titles containing the specified string (case-insensitive)
+//     const products = await Product.find({
+//       title: { $regex: new RegExp(title, "i") },
+//     });
+
+//     if (products.length === 0) {
+//       return res.status(404).json({ message: "No products found" });
+//     }
+
+//     // If products found, return them
+//     res.status(200).json(products);
+//   } catch (error) {
+//     // Handle errors
+//     console.error("Error getting products:", error);
+//     res.status(500).json({ message: "Server error" });
+//   }
+// });
+
+router.get("/hi", async (req, res, next) => {
+  const { title, categories } = req.query;
+  console.log(title, "from my", categories);
+
+  try {
+    let query = {};
+    if (title) {
+      query.title = { $regex: new RegExp(title, "i") };
+    }
+
+    if (categories) {
+      query.categories = { $regex: new RegExp(categories, "i") };
+    }
+
+    console.log(query);
+
+    const products = await Product.find(query);
+
+    if (products.length === 0) {
+      return res.status(200).json(products);
+    }
+
+    res.status(200).json(products);
+  } catch (error) {
+    // Handle errors
+    console.error("Error getting products:", error);
+    res.status(500).json({ message: "Server error" });
+  }
+  next();
+});
 module.exports = router;

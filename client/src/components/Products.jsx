@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import styled from "styled-components";
 import Product from "./Product";
 import axios from "axios";
-
+import { useSelector } from "react-redux";
 const Container = styled.div`
   padding: 20px;
   display: flex;
@@ -10,26 +10,26 @@ const Container = styled.div`
   justify-content: space-between;
   // background-color: #d9fcf6;
   // border-radius: 0.5%;
-
 `;
 
 const Products = ({ cat, filters, sort }) => {
   const [products, setProducts] = useState([]);
   const [filteredProducts, setFilteredProducts] = useState([]);
-
+  const search = useSelector((state) => state.product.search);
+  console.log(search);
   useEffect(() => {
     const getProducts = async () => {
       try {
         const res = await axios.get(
-          cat
-            ? `http://localhost:5000/api/products?category=${cat}`
-            : "http://localhost:5000/api/products"
+          `http://localhost:5000/api/products/hi?categories=${
+            cat ? cat : ""
+          }&title=${search ? search : ""}`
         );
         setProducts(res.data);
       } catch (err) {}
     };
     getProducts();
-  }, [cat]);
+  }, [cat,search]);
 
   useEffect(() => {
     cat &&
@@ -61,9 +61,8 @@ const Products = ({ cat, filters, sort }) => {
   return (
     <Container>
       {cat
-        ? filteredProducts?.map((item) =>{ 
-           
-          return <Product item={item} key={item._id} />
+        ? filteredProducts?.map((item) => {
+            return <Product item={item} key={item._id} />;
           })
         : products
             .slice(0)

@@ -8,13 +8,13 @@ import Footer from "../components/Footer";
 import { mobile } from "../responsive";
 import { useLocation } from "react-router";
 import { useState } from "react";
-import Pagination from '../components/Pagin';
-import Posts from '../components/Posts';
+import Pagination from "../components/Pagin";
+import Posts from "../components/Posts";
 import { useEffect } from "react";
 import axios from "axios";
 //import ReactPaginate from "react-paginate";
 import { Link } from "react-router-dom";
-
+import { useSelector } from "react-redux";
 
 const Container = styled.div``;
 
@@ -56,7 +56,7 @@ const List = styled.ul`
   flex-wrap: wrap;
   // justify-contents: center;
   justify-content: space-between;
-  align-items:center;
+  align-items: center;
   margin-left: 20px;
   width: 35%;
 `;
@@ -66,7 +66,6 @@ const ListItem = styled.li`
   margin-left: 10px;
   margin-bottom: 10px;
   margin-right: 10px;
-
 `;
 
 const Button = styled.button`
@@ -75,7 +74,7 @@ const Button = styled.button`
   cursor: pointer;
 
   padding: 10px;
-  color:white;
+  color: white;
   cursor: pointer;
   font-weight: 600;
   border-style: solid;
@@ -101,18 +100,22 @@ const Shop = () => {
   const [sort, setSort] = useState("newest");
   const [currentPage, setCurrentPage] = useState(1);
   const [postsPerPage] = useState(8);
-
-  
+  const search = useSelector((state) => state.product.search);
+  console.log(search, "from shop");
 
   useEffect(() => {
     const fetchPosts = async () => {
       setLoading(true);
-      const res = await axios.get("http://localhost:5000/api/products");
+      const res = await axios.get(
+        `http://localhost:5000/api/products/hi?categories=${
+          cat ? cat : ""
+        }&title=${search ? search : ""}`
+      );
       setPosts(res.data);
       setLoading(false);
     };
     fetchPosts();
-  }, []);
+  }, [search, cat]);
 
   // const handleFilters = (e) => {
   //   const value = e.target.value;
@@ -128,8 +131,7 @@ const Shop = () => {
   const currentPosts = posts.slice(indexOfFirstPost, indexOfLastPost);
 
   // Change page
-  const paginate = pageNumber => setCurrentPage(pageNumber);
-
+  const paginate = (pageNumber) => setCurrentPage(pageNumber);
 
   return (
     <Container>
@@ -137,13 +139,34 @@ const Shop = () => {
       <Announcement />
       <Title>Shop</Title>
       <List>
-          <FilterText>Categories :</FilterText>
-          <Button><Link to={`/products/Vegetable`} style={{ textDecoration: 'none', color: 'black' }}>Vegetables</Link></Button>
-          
-          <Button><Link to={`/products/Fruit`} style={{ textDecoration: 'none', color: 'black' }}>Fruits</Link></Button>
-      
-          <Button><Link to={`/products/Dairy`} style={{ textDecoration: 'none', color: 'black' }}>Dairy</Link></Button>
-      </List>  
+        <FilterText>Categories :</FilterText>
+        <Button>
+          <Link
+            to={`/products/Vegetable`}
+            style={{ textDecoration: "none", color: "black" }}
+          >
+            Vegetables
+          </Link>
+        </Button>
+
+        <Button>
+          <Link
+            to={`/products/Fruit`}
+            style={{ textDecoration: "none", color: "black" }}
+          >
+            Fruits
+          </Link>
+        </Button>
+
+        <Button>
+          <Link
+            to={`/products/Dairy`}
+            style={{ textDecoration: "none", color: "black" }}
+          >
+            Dairy
+          </Link>
+        </Button>
+      </List>
 
       <Posts posts={currentPosts} loading={loading} />
       <Pagination

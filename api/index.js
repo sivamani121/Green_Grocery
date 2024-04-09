@@ -75,14 +75,14 @@ app.use(express.json());
 app.use("/home", (req, res) => {
   res.json({ message: "running" });
 });
-app.use("/api/auth",(req,res,next)=>{console.log("HI");next()} ,authRoute);
-app.use("/api/users",(req,res,next)=>{console.log("HI");next()}, userRoute);
-app.use("/api/products",(req,res,next)=>{console.log("HI");next()}, productRoute);
-app.use("/api/carts",(req,res,next)=>{console.log("HI");next()}, cartRoute);
-app.use("/api/orders",(req,res,next)=>{console.log("HI");next()}, orderRoute);
-app.use("/api/checkout",(req,res,next)=>{console.log("HI");next()}, stripeRoute);
-app.use("/api/contact",(req,res,next)=>{console.log("HI");next()}, contactRoute);
-app.use("/upload-images",(req,res,next)=>{console.log("HI");next()}, upload.array("image"), async (req, res) => {
+app.use("/api/auth", authRoute);
+app.use("/api/users", userRoute);
+app.use("/api/products", productRoute);
+app.use("/api/carts", cartRoute);
+app.use("/api/orders", orderRoute);
+app.use("/api/checkout", stripeRoute);
+app.use("/api/contact", contactRoute);
+app.use("/upload-images", upload.array("image"), async (req, res) => {
   const uploader = async (path) => await cloudinary.uploads(path, "Images");
   if (req.method === "POST") {
     const urls = [];

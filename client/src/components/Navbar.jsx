@@ -4,14 +4,12 @@ import React from "react";
 import styled from "styled-components";
 import { mobile } from "../responsive";
 import { useSelector } from "react-redux";
-import  { useState } from "react"
+import { useState } from "react";
 import { Link, useHistory } from "react-router-dom";
-import { lgout } from "../redux/apiCalls";
+import { lgout, setsearchstr } from "../redux/apiCalls";
 import { useDispatch } from "react-redux";
-import {
-  Search,
-  BookmarksOutlined
-} from "@material-ui/icons"
+import { Search, BookmarksOutlined } from "@material-ui/icons";
+
 const Container = styled.div`
   height: 60px;
   background-color: #34eb77;
@@ -33,7 +31,7 @@ const SearchContainer = styled.div`
   align-items: center;
   margin-left: 25px;
   padding: 5px;
-`
+`;
 
 const Left = styled.div`
   flex: 1;
@@ -42,7 +40,7 @@ const Left = styled.div`
 `;
 
 const Language = styled.span`
-   font-size: 14px;
+  font-size: 14px;
 
   cursor: pointer;
 
@@ -85,7 +83,7 @@ const Input = styled.input`
   padding: 5px;
   border: none;
   ${mobile({ width: "50px" })}
-`
+`;
 
 const MenuItem = styled.div`
   text-decoration: underline;
@@ -95,57 +93,85 @@ const MenuItem = styled.div`
   ${mobile({ fontSize: "12px", marginLeft: "10px" })}
 `;
 
-
 const Navbar = () => {
-  const [search, setSearch] = useState("")
-  const quantity = useSelector(state=>state.cart.quantity);
+  const [search, setSearch] = useState(
+    useSelector((state) => state.product.search)
+  );
+  const quantity = useSelector((state) => state.cart.quantity);
   const user = useSelector((state) => state.user.currentUser);
   const dispatch = useDispatch();
-  const history = useHistory()
+  const history = useHistory();
   const handleClick = () => {
     lgout(dispatch);
   };
 
-    //handling submit
-    const handleSubmit = (e) => {
-      e.preventDefault()
-      history.push(`/products/${search}`)
-    }
-  
-  if (!user){ 
+  //handling submit
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    // history.push(`/products/${search}`)
+    console.log(search);
+    dispatch(setsearchstr(search));
+  };
+
+  if (!user) {
     return (
       <Container>
         <Wrapper>
           <Left>
-            <Language><Link to={`/`}><img src="../favicon.ico" width="45" height="35" alt=""></img></Link></Language>
-            
+            <Language>
+              <Link to={`/`}>
+                <img src="../favicon.ico" width="45" height="35" alt=""></img>
+              </Link>
+            </Language>
+
             {/* <SearchContainer>
               <Input placeholder="Search" />
               <Search style={{ color: "gray", fontSize: 16 }} />
             </SearchContainer> */}
             {/* Test */}
-            <form onSubmit={handleSubmit}>
-            <SearchContainer>
-              <Input
-                placeholder="Search Products"
-                onChange={(e) => setSearch(e.target.value)}
-              />
-              <Search style={{ color: "black", fontSize: 25}} />
-            </SearchContainer>
-          </form>
+            <form
+              onSubmit={handleSubmit}
+              onKeyDown={(e) => {
+                e.key === "Enter" ? handleSubmit : none;
+              }}
+            >
+              <SearchContainer>
+                <Input
+                  placeholder="Search Products"
+                  onChange={(e) => setSearch(e.target.value)}
+                />
+                <Search style={{ color: "black", fontSize: 25 }} />
+              </SearchContainer>
+            </form>
           </Left>
           <Center>
-            <Logo><Link to={`/`} style={{ textDecoration: 'none', color: 'black' }}>Green Grocery</Link></Logo>
+            <Logo>
+              <Link to={`/`} style={{ textDecoration: "none", color: "black" }}>
+                Green Grocery
+              </Link>
+            </Logo>
           </Center>
           <Right>
-          <Link to="/shop" style={{ textDecoration: 'none', color: 'black' }}>
-              <MenuItem style={{ textDecoration: 'none', color: 'black' }}>SHOP</MenuItem>
+            <Link to="/shop" style={{ textDecoration: "none", color: "black" }}>
+              <MenuItem style={{ textDecoration: "none", color: "black" }}>
+                SHOP
+              </MenuItem>
             </Link>
-            <Link to="/register" style={{ textDecoration: 'none', color: 'black' }}>
-              <MenuItem style={{ textDecoration: 'none', color: 'black' }}>REGISTER </MenuItem>
+            <Link
+              to="/register"
+              style={{ textDecoration: "none", color: "black" }}
+            >
+              <MenuItem style={{ textDecoration: "none", color: "black" }}>
+                REGISTER{" "}
+              </MenuItem>
             </Link>
-            <Link to="/login" style={{ textDecoration: 'none', color: 'black' }}>
-              <MenuItem style={{ textDecoration: 'none', color: 'black' }}>SIGN IN</MenuItem>
+            <Link
+              to="/login"
+              style={{ textDecoration: "none", color: "black" }}
+            >
+              <MenuItem style={{ textDecoration: "none", color: "black" }}>
+                SIGN IN
+              </MenuItem>
             </Link>
             <Link to="/login">
               <MenuItem>
@@ -158,40 +184,63 @@ const Navbar = () => {
         </Wrapper>
       </Container>
     );
-  }
-  else{
+  } else {
     return (
       <Container>
         <Wrapper>
           <Left>
-            <Language><Link to={`/`}><img src="../favicon.ico" width="45" height="35" alt=""></img></Link></Language>
+            <Language>
+              <Link to={`/`}>
+                <img src="../favicon.ico" width="45" height="35" alt=""></img>
+              </Link>
+            </Language>
             {/* <SearchContainer>
               <Input placeholder="Search" />
               <Search style={{ color: "gray", fontSize: 16 }} />
             </SearchContainer> */}
-             <form onSubmit={handleSubmit}>
-            <SearchContainer>
-              <Input
-                placeholder="Search Products"
-                onChange={(e) => setSearch(e.target.value)}
-              />
-              <Search style={{ color: "gray", fontSize: 16 }} />
-            </SearchContainer>
-          </form>
-            
+            <form onSubmit={handleSubmit}>
+              <SearchContainer>
+                <Input
+                  placeholder="Search Products"
+                  value={search}
+                  onChange={(e) => {
+                    setSearch(e.target.value);
+                    dispatch(setsearchstr(e.target.value));
+                  }}
+                />
+                <Search style={{ color: "gray", fontSize: 16 }} />
+              </SearchContainer>
+            </form>
           </Left>
           <Center>
-            <Logo><Link to={`/`} style={{ textDecoration: 'none', color: 'black' }}>Green Grocery</Link></Logo>
+            <Logo>
+              <Link to={`/`} style={{ textDecoration: "none", color: "black" }}>
+                Green Grocery
+              </Link>
+            </Logo>
           </Center>
           <Right>
-          <Link to="/shop" style={{ textDecoration: 'none', color: 'black' }}>
-              <MenuItem style={{ textDecoration: 'none', color: 'black' }}>SHOP</MenuItem>
+            <Link to="/shop" style={{ textDecoration: "none", color: "black" }}>
+              <MenuItem style={{ textDecoration: "none", color: "black" }}>
+                SHOP
+              </MenuItem>
             </Link>
-          <Link to={"/user/"+user._id} style={{ textDecoration: 'none', color: 'black' }}>
-              <MenuItem style={{ textDecoration: 'none', color: 'black'}}>Hello, {user.username.toUpperCase()} </MenuItem>
+            <Link
+              to={"/user/" + user._id}
+              style={{ textDecoration: "none", color: "black" }}
+            >
+              <MenuItem style={{ textDecoration: "none", color: "black" }}>
+                Hello, {user.username.toUpperCase()}{" "}
+              </MenuItem>
             </Link>
-            <Link to="/" onClick={handleClick} style={{ textDecoration: 'none', color: 'black' }}>
-              <MenuItem style={{ textDecoration: 'none', color: 'black' }}><b>Logout</b></MenuItem>
+            <Link
+              to="/"
+              onClick={handleClick}
+              style={{ textDecoration: "none", color: "black" }}
+            >
+              <MenuItem style={{ textDecoration: "none", color: "black" }}>
+                <b>Logout</b>
+              </MenuItem>
             </Link>
             <Link to="/cart">
               <MenuItem>
