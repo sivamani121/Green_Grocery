@@ -11,7 +11,7 @@ import { publicRequest } from "../requestMethods";
 import { addProduct, delCart } from "../redux/cartRedux";
 import { useDispatch } from "react-redux";
 import { Typography } from "@material-ui/core";
-
+import axios from "axios";
 const Container = styled.div``;
 
 const Wrapper = styled.div`
@@ -135,15 +135,18 @@ const Product = () => {
   useEffect(() => {
     const getProduct = async () => {
       try {
-        const res = await publicRequest.get("/products/find/" + id);
+        //const res = await publicRequest.get("/products/find/" + id);
+        const res = await axios.get(
+          `http://localhost:5000/api/products/find/${id}`
+        );
         setProduct(res.data);
-      } catch { }
+      } catch {}
     };
     getProduct();
   }, [id]);
 
   const handleQuantity = (type) => {
-    console.log(type)
+    console.log(type);
     if (type === "dec") {
       quantity > 1 && setQuantity(quantity - 1);
     } else {
@@ -152,16 +155,14 @@ const Product = () => {
   };
 
   const handleClick = () => {
-    dispatch(
-      addProduct({ ...product, id, quantity, color, size })
-    );
+    dispatch(addProduct({ ...product, id, quantity, color, size }));
   };
   // const delClick = () => {
   //   dispatch(
   //     delCart()
   //   );
   // };
-  const [stockError, setStockError] = useState(false)
+  const [stockError, setStockError] = useState(false);
   return (
     <Container>
       <Navbar />
@@ -185,33 +186,38 @@ const Product = () => {
           </FilterContainer>
           <AddContainer>
             <AmountContainer>
-              <Remove onClick={() => {
-                const stock = product.stock
-                if (stock >= quantity) {
-                  setStockError("")
-                } else {
-                  setStockError("")
-                }
-                handleQuantity("dec")
-              }} />
+              <Remove
+                onClick={() => {
+                  const stock = product.stock;
+                  if (stock >= quantity) {
+                    setStockError("");
+                  } else {
+                    setStockError("");
+                  }
+                  handleQuantity("dec");
+                }}
+              />
               <Amount>{quantity}</Amount>
-              <Add onClick={() => {
-                const stock = product.stock
-                if (stock <= quantity) {
-                  setStockError(`${product.title} are Out of Stock`)
-                  return
-                } else {
-                  handleQuantity("inc")
-                  setStockError("")
-                }
-              }} />
+              <Add
+                onClick={() => {
+                  const stock = product.stock;
+                  if (stock <= quantity) {
+                    setStockError(`${product.title} are Out of Stock`);
+                    return;
+                  } else {
+                    handleQuantity("inc");
+                    setStockError("");
+                  }
+                }}
+              />
             </AmountContainer>
             <Button onClick={handleClick}>ADD TO CART</Button>
             {/* <Button onClick={delClick}>Del TO CART</Button> */}
-            {(stockError !== "") && <Typography color="error" variant="h5">
-              {stockError}
-            </Typography>}
-
+            {stockError !== "" && (
+              <Typography color="error" variant="h5">
+                {stockError}
+              </Typography>
+            )}
           </AddContainer>
         </InfoContainer>
       </Wrapper>
