@@ -1,17 +1,22 @@
 import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { login } from "../../redux/apiCalls";
-
+import { Redirect } from "react-router-dom";
 const Login = () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const dispatch = useDispatch();
   const { isFetching, error } = useSelector((state) => state.user);
-
-  const handleClick = (e) => {
+  const user = useSelector((state) => state.user.currentUser);
+  const is_login = user ? user.isAdmin : false;
+  const handleClick = async (e) => {
     e.preventDefault();
-    login(dispatch, { username, password });
+    await login(dispatch, { username, password });
   };
+  if (is_login) {
+    // Redirect to a different route after successful login
+    return <Redirect to="/" />;
+  }
 
   return (
     <div
@@ -35,7 +40,7 @@ const Login = () => {
         placeholder="password"
         onChange={(e) => setPassword(e.target.value)}
       />
-      <button onClick={handleClick} style={{ padding: 10, width:100 }}>
+      <button onClick={handleClick} style={{ padding: 10, width: 100 }}>
         Login
       </button>
       {error && <h1>Something went wrong...</h1>}

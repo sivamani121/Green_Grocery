@@ -22,8 +22,10 @@ import Contact from "./pages/contact/Contact";
 import PayList from "./pages/paymentList/Transactions";
 
 function App() {
-  // const admin = useSelector((state) => state.user.currentUser.isAdmin);
-  const admin = true;
+  const user = useSelector((state) => state.user.currentUser);
+  const admin = user ? user.isAdmin : false;
+
+  // const admin = true;
   return (
     <Router>
       <Switch>
@@ -71,6 +73,7 @@ function App() {
             </div>
           </>
         )}
+        <Route render={() => <Redirect to="/login" />} />
       </Switch>
     </Router>
   );

@@ -1,6 +1,7 @@
 import React from "react";
 import "./topbar.css";
 import { NotificationsNone, Language, Settings } from "@material-ui/icons";
+import Logout from "../../pages/logout/logout";
 
 export default function Topbar() {
   return (
@@ -20,6 +21,9 @@ export default function Topbar() {
           </div>
           <div className="topbarIconContainer">
             <Settings />
+          </div>
+          <div className="topbarIconContainer">
+            <Logout />
           </div>
           <img src="" />
         </div>

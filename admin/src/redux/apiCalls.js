@@ -1,4 +1,4 @@
-import { loginFailure, loginStart, loginSuccess } from "./userRedux";
+import { loginFailure, loginStart, loginSuccess, logout } from "./userRedux";
 import { publicRequest, userRequest } from "../requestMethods";
 import {
   getProductFailure,
@@ -21,11 +21,7 @@ import {
   getContactFailure,
 } from "./contactRedux";
 
-import {
-  getOrderStart,
-  getOrderSuccess,
-  getOrderFailure,
-} from "./orderRedux";
+import { getOrderStart, getOrderSuccess, getOrderFailure } from "./orderRedux";
 
 export const login = async (dispatch, user) => {
   dispatch(loginStart());
@@ -98,3 +94,6 @@ export const getOrders = async (dispatch) => {
   }
 };
 
+export const logoutUser = async (dispatch) => {
+  dispatch(logout());
+};
