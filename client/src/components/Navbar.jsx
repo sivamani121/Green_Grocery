@@ -132,7 +132,7 @@ const Navbar = () => {
             <form
               onSubmit={handleSubmit}
               onKeyDown={(e) => {
-                e.key === "Enter" ? handleSubmit : none;
+                return e.key === "Enter" ? handleSubmit : null;
               }}
             >
               <SearchContainer>

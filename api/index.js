@@ -11,13 +11,7 @@ const orderRoute = require("./routes/order");
 const stripeRoute = require("./routes/stripe");
 const contactRoute = require("./routes/contact");
 
-// //Morgan Middleware
-// const cors = require("cors");
-// const path = require("path");
-// const morgan = require("morgan");
-// const rfs = require("rotating-file-stream");
 
-//Morgan Middleware
 const cors = require("cors");
 const morgan = require("morgan");
 const { accessLogStream } = require("./middlewares/morgan");

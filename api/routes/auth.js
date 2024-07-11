@@ -47,6 +47,8 @@ router.post("/login", async (req, res) => {
       return res.status(401).json("Wrong credentials!");
     }
 
+    
+    // creating jwt validation token
     const accessToken = jwt.sign(
       {
         id: user._id,
